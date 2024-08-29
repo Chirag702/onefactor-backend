@@ -2,6 +2,7 @@ package com.onefactor.app.Utlities.OTP;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.onefactor.app.Entity.User;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -74,37 +75,45 @@ public class OtpService {
 		}
 	}
 
-	  public String validateOtp(String phone, String code, String verificationId) {
-	        try {
-	            // URL encode parameters
-	            String encodedVerificationId = URLEncoder.encode(verificationId, StandardCharsets.UTF_8.toString());
-	            String encodedCode = URLEncoder.encode(code, StandardCharsets.UTF_8.toString());
+	public boolean validateOtp(String phone, String code, String verificationId) {
+		try {
+			// URL encode parameters
+			String encodedVerificationId = URLEncoder.encode(verificationId, StandardCharsets.UTF_8.toString());
+			String encodedCode = URLEncoder.encode(code, StandardCharsets.UTF_8.toString());
 
-	            // Construct the URL
-	            String url = String.format("https://cpaas.messagecentral.com/verification/v3/validateOtp?verificationId=%s&code=%s",
-	                                       encodedVerificationId, encodedCode);
+			// Construct the URL
+			String url = String.format(
+					"https://cpaas.messagecentral.com/verification/v3/validateOtp?verificationId=%s&code=%s",
+					encodedVerificationId, encodedCode);
 
-	            // Set up headers
-	            HttpHeaders headers = new HttpHeaders();
-				headers.set("authToken", authToken);
+			// Set up headers
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("authToken", authToken);
 
-	            // Create HttpEntity
-	            HttpEntity<String> entity = new HttpEntity<>(headers);
+			// Create HttpEntity
+			HttpEntity<String> entity = new HttpEntity<>(headers);
 
-	            // Make the request
-	            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+			// Make the request
+			ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
-	            // Return response body
-	            return response.getBody();
-	        } catch (HttpClientErrorException e) {
-	            // Handle client error
-	            System.err.println("HTTP Status Code: " + e.getStatusCode());
-	            System.err.println("Response Body: " + e.getResponseBodyAsString());
-	            return null;
-	        } catch (Exception e) {
-	            // Handle other exceptions
-	            e.printStackTrace();
-	            return null;
-	        }
-	    }
+			JsonNode jsonResponse = objectMapper.readTree(response.getBody());
+			JsonNode dataNode = jsonResponse.path("data");
+			String isVerified = dataNode.path("	verificationStatus").asText();
+
+			if (isVerified == "VERIFICATION_COMPLETED") {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (HttpClientErrorException e) {
+			// Handle client error
+			System.err.println("HTTP Status Code: " + e.getStatusCode());
+			System.err.println("Response Body: " + e.getResponseBodyAsString());
+			return false;
+		} catch (Exception e) {
+			// Handle other exceptions
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

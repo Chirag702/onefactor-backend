@@ -35,21 +35,33 @@ public class UserController {
 			// If no action is needed, this can be left empty.
 		}
 	}
-
-	  @PostMapping("/validateOtp")
-	    public ResponseEntity<ApiResponse<String>> validateOtp(
-	            @RequestParam String phone,
-	            @RequestParam String code) {
-	        try {
-	            String result = userService.validateOtp(phone, code);
-	            ApiResponse<String> response = new ApiResponse<>(200, null, result);
-	            return ResponseEntity.ok(response);
-	        } catch (HttpClientErrorException e) {
-	            ApiResponse<String> response = new ApiResponse<>(e.getStatusCode().value(), e.getResponseBodyAsString(), null);
-	            return ResponseEntity.status(e.getStatusCode()).body(response);
-	        } catch (Exception e) {
-	            ApiResponse<String> response = new ApiResponse<>(500, "Internal Server Error", null);
-	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-	        }
+	@PostMapping("/validateOtp")
+	public ResponseEntity<ApiResponse<Boolean>> validateOtp(
+	        @RequestParam String phone,
+	        @RequestParam String code) {
+	    try {
+	        // Call service to validate OTP
+	        boolean result = userService.validateOtp(phone, code);
+	        
+	        // Build and return success response
+	        ApiResponse<Boolean> response = new ApiResponse<>(200, null, result);
+	        return ResponseEntity.ok(response);
+	    } catch (HttpClientErrorException e) {
+	        // Handle HTTP client errors
+	        ApiResponse<Boolean> response = new ApiResponse<>(
+	                e.getStatusCode().value(),
+	                e.getResponseBodyAsString(),
+	                false
+	        );
+	        return ResponseEntity.status(e.getStatusCode()).body(response);
+	    } catch (Exception e) {
+	        // Handle generic exceptions
+	        ApiResponse<Boolean> response = new ApiResponse<>(
+	                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+	                "Internal Server Error",
+	                false
+	        );
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 	    }
+	}
 }

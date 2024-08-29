@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String validateOtp(String phone, String code) {
+	public boolean validateOtp(String phone, String code) {
 		String verificationId = userRepository.findByPhone(phone).getVerificationId();
 		System.out.println(verificationId);
 		return otpService.validateOtp(phone, code, verificationId);

@@ -9,5 +9,5 @@ import com.onefactor.app.Entity.User;
 public interface UserService {
 	User saveUser(User user);
 
-    String validateOtp(String verificationId, String code);
+    boolean validateOtp(String verificationId, String code);
 }
