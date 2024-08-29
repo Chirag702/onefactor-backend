@@ -86,7 +86,7 @@ public class OtpService {
 
 	            // Set up headers
 	            HttpHeaders headers = new HttpHeaders();
-	            headers.set("Authorization", "Bearer " + authToken);
+				headers.set("authToken", authToken);
 
 	            // Create HttpEntity
 	            HttpEntity<String> entity = new HttpEntity<>(headers);
