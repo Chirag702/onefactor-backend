@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
 			if (userRepository.existsByPhone(user.getPhone())) {
 				User user2=userRepository.findByPhone(user.getPhone());
 				user2.setVerificationId(user.getVerificationId());
-				return userRepository.findByPhone(user.getPhone());
+				return userRepository.save(user2);
 			} else {
 				return userRepository.save(user);
 			}
