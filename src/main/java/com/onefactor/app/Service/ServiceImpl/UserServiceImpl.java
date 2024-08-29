@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.onefactor.app.Entity.User;
 import com.onefactor.app.Repository.UserRepository;
+import com.onefactor.app.Response.ApiResponse;
 import com.onefactor.app.Service.UserService;
 import com.onefactor.app.Utlities.OTP.OtpService;
 
@@ -26,7 +27,7 @@ public class UserServiceImpl implements UserService {
 			user.setVerificationId(otpService.sendOtp(user.getPhone()));
 
 			if (userRepository.existsByPhone(user.getPhone())) {
-				User user2=userRepository.findByPhone(user.getPhone());
+				User user2 = userRepository.findByPhone(user.getPhone());
 				user2.setVerificationId(user.getVerificationId());
 				return userRepository.save(user2);
 			} else {
@@ -38,9 +39,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean validateOtp(String phone, String code) {
+	public ApiResponse<Object> validateOtp(String phone, String code) {
 		String verificationId = userRepository.findByPhone(phone).getVerificationId();
-		System.out.println(verificationId);
+		System.out.println("Verification ID: " + verificationId);
 		return otpService.validateOtp(phone, code, verificationId);
 	}
 }

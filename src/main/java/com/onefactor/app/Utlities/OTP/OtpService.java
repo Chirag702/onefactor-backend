@@ -3,6 +3,7 @@ package com.onefactor.app.Utlities.OTP;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onefactor.app.Entity.User;
+import com.onefactor.app.Response.ApiResponse;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -75,7 +77,7 @@ public class OtpService {
 		}
 	}
 
-	public boolean validateOtp(String phone, String code, String verificationId) {
+	public ApiResponse<Object> validateOtp(String phone, String code, String verificationId) {
 		try {
 			// URL encode parameters
 			String encodedVerificationId = URLEncoder.encode(verificationId, StandardCharsets.UTF_8.toString());
@@ -96,24 +98,34 @@ public class OtpService {
 			// Make the request
 			ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
+			// Parse the response
 			JsonNode jsonResponse = objectMapper.readTree(response.getBody());
+			int responseCode = jsonResponse.path("responseCode").asInt();
+			String message = jsonResponse.path("message").asText();
 			JsonNode dataNode = jsonResponse.path("data");
-			String isVerified = dataNode.path("	verificationStatus").asText();
 
-			if (isVerified == "VERIFICATION_COMPLETED") {
-				return true;
+			if (responseCode == 200) {
+				return new ApiResponse<>(200, null, dataNode);
 			} else {
-				return false;
+				// Extract the relevant error message
+				String errorMessage = jsonResponse.path("message").asText();
+				return new ApiResponse<>(responseCode, errorMessage, null);
 			}
+
 		} catch (HttpClientErrorException e) {
 			// Handle client error
-			System.err.println("HTTP Status Code: " + e.getStatusCode());
-			System.err.println("Response Body: " + e.getResponseBodyAsString());
-			return false;
+			try {
+				JsonNode jsonResponse = objectMapper.readTree(e.getResponseBodyAsString());
+				String errorMessage = jsonResponse.path("message").asText();
+				return new ApiResponse<>(e.getStatusCode().value(), errorMessage, null);
+			} catch (Exception parseException) {
+				// Fallback in case of parsing error
+				return new ApiResponse<>(e.getStatusCode().value(), "Error parsing response: " + e.getMessage(), null);
+			}
 		} catch (Exception e) {
 			// Handle other exceptions
-			e.printStackTrace();
-			return false;
+			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Server Error: " + e.getMessage(), null);
 		}
 	}
+
 }
