@@ -1,7 +1,7 @@
 package com.onefactor.app.Service.ServiceImpl;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.onefactor.app.Entity.User;
@@ -14,41 +14,32 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-    @Autowired
-    private OtpService otpService;
+	@Autowired
+	private OtpService otpService;
 
-    @Override
-    public User saveUser(User user) {
-        user.setVerificationId(otpService.sendOtp(user.getPhone()));
+	@Override
+	public User saveUser(User user) {
+		try {
+			user.setVerificationId(otpService.sendOtp(user.getPhone()));
 
-    if(userRepository.existsByPhone(user.getPhone())) {
-        return userRepository.findByPhone(user.getPhone());
-    }
-    else {
-    	return userRepository.save(user);
-    }
-    }
+			if (userRepository.existsByPhone(user.getPhone())) {
+				User user2=userRepository.findByPhone(user.getPhone());
+				user2.setVerificationId(user.getVerificationId());
+				return userRepository.findByPhone(user.getPhone());
+			} else {
+				return userRepository.save(user);
+			}
+		} catch (Exception e) {
+			return null;
+		}
+	}
 
-    @Override
-    public User findByPhone(String phone) {
-        return userRepository.findByPhone(phone);
-    }
-
-    @Override
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-
-    @Override
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    @Override
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
-    }
+	@Override
+	public String validateOtp(String phone, String code) {
+		String verificationId = userRepository.findByPhone(phone).getVerificationId();
+		return otpService.validateOtp(phone, code, verificationId);
+	}
 }
