@@ -59,6 +59,16 @@ public class UserServiceImpl implements UserService {
 			user2.setEmail(user.getEmail());
 		}
 		
+		if (user.getPan() != null) {
+			user2.setPan(user.getPan());
+		}
+		if (user.getDob() != null) {
+			user2.setDob(user.getDob());
+		}
+		if (user.getGender() != null) {
+			user2.setGender(user.getGender());
+		}
+		
 		userRepository.save(user2);
 
 	}
