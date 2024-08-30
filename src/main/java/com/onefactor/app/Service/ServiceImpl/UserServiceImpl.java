@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
 		if (user.getEmail() != null) {
 			user2.setEmail(user.getEmail());
 		}
-		
+
 		if (user.getPan() != null) {
 			user2.setPan(user.getPan());
 		}
@@ -68,7 +68,22 @@ public class UserServiceImpl implements UserService {
 		if (user.getGender() != null) {
 			user2.setGender(user.getGender());
 		}
-		
+
+		if (user.getHno() != null) {
+			user2.setHno(user.getHno());
+		}
+
+		if (user.getBuilding() != null) {
+			user2.setBuilding(user.getBuilding());
+		}
+
+		if (user.getArea() != null) {
+			user2.setArea(user.getArea());
+		}
+		if (user.getPinCode() != null) {
+			user2.setPinCode(user.getPinCode());
+		}
+
 		userRepository.save(user2);
 
 	}
