@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onefactor.app.Entity.User;
 import com.onefactor.app.Response.ApiResponse;
+import com.onefactor.app.Utlities.JWT.JWTUtil;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -23,6 +25,9 @@ import org.springframework.util.MultiValueMap;
 
 @Service
 public class OtpService {
+
+	@Autowired
+	private JWTUtil jwtUtil;
 
 	@Value("${messagecentral.auth.token}")
 	private String authToken;
@@ -103,10 +108,11 @@ public class OtpService {
 			int responseCode = jsonResponse.path("responseCode").asInt();
 			String message = jsonResponse.path("message").asText();
 			JsonNode dataNode = jsonResponse.path("data");
-			
 
 			if (responseCode == 200) {
-				return new ApiResponse<>(200, null, dataNode);
+				String token = jwtUtil.generateToken(phone);
+
+				return new ApiResponse<>(200, null, token);
 			} else {
 				// Extract the relevant error message
 				String errorMessage = jsonResponse.path("message").asText();
