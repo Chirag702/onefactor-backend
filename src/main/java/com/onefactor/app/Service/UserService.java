@@ -11,4 +11,6 @@ public interface UserService {
 	User saveUser(User user);
 
     ApiResponse<Object> validateOtp(String phone, String code);
+
+	void initProfile(User user);
 }

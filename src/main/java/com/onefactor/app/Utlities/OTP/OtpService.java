@@ -103,6 +103,7 @@ public class OtpService {
 			int responseCode = jsonResponse.path("responseCode").asInt();
 			String message = jsonResponse.path("message").asText();
 			JsonNode dataNode = jsonResponse.path("data");
+			
 
 			if (responseCode == 200) {
 				return new ApiResponse<>(200, null, dataNode);

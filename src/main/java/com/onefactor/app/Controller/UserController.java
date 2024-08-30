@@ -56,4 +56,25 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
 	}
+	
+	
+	@PostMapping("/profile/init")
+	public ResponseEntity<ApiResponse<String>> initProfile(@RequestBody User user) {
+		try {
+			userService.initProfile(user);
+			ApiResponse<String> response = new ApiResponse<>(200, null, "User profile created");
+			return ResponseEntity.ok(response);
+		} catch (HttpClientErrorException e) {
+			ApiResponse<String> response = new ApiResponse<>(e.getStatusCode().value(), e.getResponseBodyAsString(),
+					null);
+			return ResponseEntity.status(e.getStatusCode()).body(response);
+		} catch (Exception e) {
+			ApiResponse<String> response = new ApiResponse<>(500, "Internal Server Error", null);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		} finally {
+			// Any cleanup code or necessary final steps can go here.
+			// If no action is needed, this can be left empty.
+		}
+	}
+
 }

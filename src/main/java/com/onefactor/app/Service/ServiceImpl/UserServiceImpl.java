@@ -31,6 +31,7 @@ public class UserServiceImpl implements UserService {
 				user2.setVerificationId(user.getVerificationId());
 				return userRepository.save(user2);
 			} else {
+
 				return userRepository.save(user);
 			}
 		} catch (Exception e) {
@@ -43,5 +44,20 @@ public class UserServiceImpl implements UserService {
 		String verificationId = userRepository.findByPhone(phone).getVerificationId();
 		System.out.println("Verification ID: " + verificationId);
 		return otpService.validateOtp(phone, code, verificationId);
+	}
+
+	@Override
+	public void initProfile(User user) {
+		User user2 = userRepository.findByPhone(user.getPhone());
+		if (user.getFirstName() != null) {
+			user2.setFirstName(user.getFirstName());
+		}
+		if (user.getLastName() != null) {
+			user2.setLastName(user.getLastName());
+		}
+		if (user.getEmail() != null) {
+			user2.setEmail(user.getEmail());
+		}
+
 	}
 }
