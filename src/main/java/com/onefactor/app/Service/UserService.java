@@ -15,4 +15,6 @@ public interface UserService {
 	void initProfile(User user);
 
 	Integer getCreditScore(String phone);
+
+	Object getProfileCompletion(String phone);
 }

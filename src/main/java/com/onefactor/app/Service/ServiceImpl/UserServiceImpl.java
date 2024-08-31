@@ -11,6 +11,8 @@ import com.onefactor.app.Service.UserService;
 import com.onefactor.app.Utlities.JWT.JWTUtil;
 import com.onefactor.app.Utlities.OTP.OtpService;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -95,5 +97,25 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Integer getCreditScore(String phone) {
 		return userRepository.findCreditScoreByPhone(phone);
+	}
+
+	@Override
+	public Map<String, Boolean> getProfileCompletion(String phone) {
+		User user = userRepository.findByPhone(phone);
+		Map<String, Boolean> profile = new HashMap<>();
+
+		// Check various fields and add to the map
+		profile.put("firstName", user.getFirstName() != null && !user.getFirstName().isEmpty());
+		profile.put("lastName", user.getLastName() != null && !user.getLastName().isEmpty());
+		profile.put("email", user.getEmail() != null && !user.getEmail().isEmpty());
+		profile.put("pan", user.getPan() != null && !user.getPan().isEmpty());
+		profile.put("dob", user.getDob() != null && !user.getDob().isEmpty());
+		profile.put("gender", user.getGender() != null && !user.getGender().isEmpty());
+		profile.put("hno", user.getHno() != null && !user.getHno().isEmpty());
+		profile.put("building", user.getBuilding() != null && !user.getBuilding().isEmpty());
+		profile.put("area", user.getArea() != null && !user.getArea().isEmpty());
+		profile.put("pinCode", user.getPinCode() != null && !user.getPinCode().isEmpty());
+
+		return profile;
 	}
 }
