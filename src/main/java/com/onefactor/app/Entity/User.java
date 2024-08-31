@@ -1,10 +1,13 @@
 package com.onefactor.app.Entity;
 
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -55,5 +58,15 @@ public class User {
 	private Boolean isEmailVerified;
 
 	private String verificationId;
+	
+	private int creditScore;
+	
+	   // Activities where this user is the sender
+    @OneToMany(mappedBy = "sender")
+    private Set<Activity> sentActivities;
+
+    // Activities where this user is the receiver
+    @OneToMany(mappedBy = "receiver")
+    private Set<Activity> receivedActivities;
 
 }

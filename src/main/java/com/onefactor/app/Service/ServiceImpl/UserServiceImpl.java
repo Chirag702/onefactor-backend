@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private JWTUtil jwtUtil;
-	
+
 	@Autowired
 	private UserRepository userRepository;
 
@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
 				user2.setVerificationId(user.getVerificationId());
 				return userRepository.save(user2);
 			} else {
-
+				user.setCreditScore(650);
 				return userRepository.save(user);
 			}
 		} catch (Exception e) {
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void initProfile(User user) {
- 		User user2 = userRepository.findByPhone(user.getPhone());
+		User user2 = userRepository.findByPhone(user.getPhone());
 		if (user.getFirstName() != null) {
 			user2.setFirstName(user.getFirstName());
 		}
