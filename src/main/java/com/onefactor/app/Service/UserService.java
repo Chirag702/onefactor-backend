@@ -13,4 +13,6 @@ public interface UserService {
     ApiResponse<Object> validateOtp(String phone, String code);
 
 	void initProfile(User user);
+
+	Integer getCreditScore(String phone);
 }

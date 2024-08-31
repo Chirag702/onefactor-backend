@@ -91,4 +91,9 @@ public class UserServiceImpl implements UserService {
 		userRepository.save(user2);
 
 	}
+
+	@Override
+	public Integer getCreditScore(String phone) {
+		return userRepository.findCreditScoreByPhone(phone);
+	}
 }
