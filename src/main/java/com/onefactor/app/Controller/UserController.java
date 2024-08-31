@@ -161,4 +161,34 @@ public class UserController {
 		}
 	}
 
+	@GetMapping()
+	public Object getUserDetails(@RequestHeader("Authorization") String tokenHeader) {
+		System.out.println("Authorization header: " + tokenHeader);
+		try {
+			// Extract token from "Bearer " prefix
+			String token = tokenHeader.startsWith("Bearer ") ? tokenHeader.substring(7) : tokenHeader;
+			System.out.println("Extracted token: " + token);
+
+			// Extract phone number from token
+			String phone = jwtUtil.extractPhone(token);
+			System.out.println("Extracted phone number: " + phone);
+
+			if (phone == null || !jwtUtil.validateToken(token, phone)) {
+				// Token is invalid or expired
+				return ResponseEntity.status(HttpStatus.FORBIDDEN)
+						.body(new ApiResponse<>(403, "Access denied. Invalid or expired token", null));
+			}
+
+			Object profile = userService.getUserMaskedDetails(phone);
+			ApiResponse<Object> response = new ApiResponse<>(200, "Checking profile", profile);
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			e.printStackTrace(); // Log the exception
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ApiResponse<>(500, "An unexpected error occurred", null));
+
+		}
+
+	}
+
 }

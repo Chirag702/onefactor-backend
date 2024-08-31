@@ -17,4 +17,6 @@ public interface UserService {
 	Integer getCreditScore(String phone);
 
 	Object getProfileCompletion(String phone);
+
+	Object getUserMaskedDetails(String phone);
 }

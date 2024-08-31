@@ -118,4 +118,21 @@ public class UserServiceImpl implements UserService {
 
 		return profile;
 	}
+
+	@Override
+	public Object getUserMaskedDetails(String phone) {
+		User user = userRepository.findByPhone(phone);
+		Map<String, String> profile = new HashMap<>();
+
+		profile.put("phone", user.getPhone().substring(0, 1) + "******" + user.getPhone().substring(7, 9));
+		profile.put("email",
+				user.getEmail().substring(0, 1) + "****" + user.getEmail().substring(user.getEmail().length() - 2));
+		profile.put("gender", "**" + user.getGender().substring(user.getGender().length() - 2));
+		profile.put("dob",
+				user.getDob().substring(user.getDob().length() - 2) + "****" + user.getDob().substring(0, 1));
+		profile.put("pan", user.getPan().substring(0, 1) + "**" + user.getPan().substring(user.getPan().length() - 2));
+		profile.put("address",
+				user.getHno() + ", " + user.getBuilding() + ", " + user.getArea() + ", " + user.getPinCode());
+		return profile;
+	}
 }
