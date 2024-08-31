@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
-    public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String phone) throws UsernameNotFoundException {
         // Load user from database or other source
-        return new org.springframework.security.core.userdetails.User(phoneNumber, "", new ArrayList<>());
+        return new org.springframework.security.core.userdetails.User(phone, "", new ArrayList<>());
     }
 }

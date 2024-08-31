@@ -29,7 +29,6 @@ public class SecurityConfig {
             .authorizeRequests()
             .requestMatchers("/api/users/login").permitAll()
             .requestMatchers("/api/users/validateOtp").permitAll()
-
             .anyRequest().authenticated()
             .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

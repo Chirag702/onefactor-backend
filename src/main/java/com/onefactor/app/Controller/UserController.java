@@ -9,10 +9,16 @@ import org.springframework.web.client.HttpClientErrorException;
 import com.onefactor.app.Entity.User;
 import com.onefactor.app.Response.ApiResponse;
 import com.onefactor.app.Service.UserService;
+import com.onefactor.app.Utlities.JWT.JWTUtil;
+
+import io.jsonwebtoken.JwtException;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
+
+	@Autowired
+	private JWTUtil jwtUtil;
 
 	@Autowired
 	private UserService userService;
@@ -56,25 +62,39 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
 	}
-	
-	
+
 	@PostMapping("/profile/init")
-	public ResponseEntity<ApiResponse<String>> initProfile(@RequestBody User user) {
+	public ResponseEntity<ApiResponse<String>> initProfile(@RequestBody User user,
+			@RequestHeader("Authorization") String tokenHeader) {
+
+		System.out.println("Authorization header: " + tokenHeader);
 		try {
+			// Extract token from "Bearer " prefix
+			String token = tokenHeader.startsWith("Bearer ") ? tokenHeader.substring(7) : tokenHeader;
+			System.out.println("Extracted token: " + token);
+
+			// Extract phone number from token
+			String phone = jwtUtil.extractPhone(token);
+			System.out.println("Extracted phone number: " + phone);
+
+			if (phone == null || !jwtUtil.validateToken(token, phone)) {
+				// Token is invalid or expired
+				return ResponseEntity.status(HttpStatus.FORBIDDEN)
+						.body(new ApiResponse<>(403, "Access denied. Invalid or expired token", null));
+			}
+
+			user.setPhone(phone);
 			userService.initProfile(user);
 			ApiResponse<String> response = new ApiResponse<>(200, null, "User profile created");
 			return ResponseEntity.ok(response);
-		} catch (HttpClientErrorException e) {
-			ApiResponse<String> response = new ApiResponse<>(e.getStatusCode().value(), e.getResponseBodyAsString(),
-					null);
-			return ResponseEntity.status(e.getStatusCode()).body(response);
+		} catch (JwtException e) {
+			// Token related issues
+			ApiResponse<String> response = new ApiResponse<>(403, "Access denied. Invalid token", null);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
 		} catch (Exception e) {
+			// General errors
 			ApiResponse<String> response = new ApiResponse<>(500, "Internal Server Error", null);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-		} finally {
-			// Any cleanup code or necessary final steps can go here.
-			// If no action is needed, this can be left empty.
 		}
 	}
-
 }

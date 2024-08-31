@@ -8,6 +8,7 @@ import com.onefactor.app.Entity.User;
 import com.onefactor.app.Repository.UserRepository;
 import com.onefactor.app.Response.ApiResponse;
 import com.onefactor.app.Service.UserService;
+import com.onefactor.app.Utlities.JWT.JWTUtil;
 import com.onefactor.app.Utlities.OTP.OtpService;
 
 import java.util.Optional;
@@ -15,6 +16,9 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
+	@Autowired
+	private JWTUtil jwtUtil;
+	
 	@Autowired
 	private UserRepository userRepository;
 
@@ -48,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void initProfile(User user) {
-		User user2 = userRepository.findByPhone(user.getPhone());
+ 		User user2 = userRepository.findByPhone(user.getPhone());
 		if (user.getFirstName() != null) {
 			user2.setFirstName(user.getFirstName());
 		}
