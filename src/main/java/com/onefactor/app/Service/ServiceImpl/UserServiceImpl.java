@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.onefactor.app.Entity.User;
 import com.onefactor.app.Repository.UserRepository;
 import com.onefactor.app.Response.ApiResponse;
+import com.onefactor.app.Response.Sender;
 import com.onefactor.app.Service.UserService;
 import com.onefactor.app.Utlities.JWT.JWTUtil;
 import com.onefactor.app.Utlities.OTP.OtpService;
@@ -130,9 +131,22 @@ public class UserServiceImpl implements UserService {
 		profile.put("gender", "**" + user.getGender().substring(user.getGender().length() - 2));
 		profile.put("dob",
 				user.getDob().substring(user.getDob().length() - 2) + "****" + user.getDob().substring(0, 1));
-		profile.put("pan", user.getPan().substring(0, 1) + "**" + user.getPan().substring(user.getPan().length() - 2));
+		profile.put("pan",
+				user.getPan().substring(0, 1) + "****" + user.getPan().substring(user.getPan().length() - 2));
 		profile.put("address",
 				user.getHno() + ", " + user.getBuilding() + ", " + user.getArea() + ", " + user.getPinCode());
 		return profile;
+	}
+
+	@Override
+	public Sender getMoneySenderDetails(String phone) {
+		User user = userRepository.findByPhone(phone);
+		Sender sender = new Sender();
+		sender.setId(user.getId());
+		sender.setFirstName(user.getFirstName());
+		sender.setLastName(user.getLastName());
+
+		return sender;
+
 	}
 }
