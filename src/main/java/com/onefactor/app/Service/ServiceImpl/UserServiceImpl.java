@@ -1,13 +1,13 @@
 package com.onefactor.app.Service.ServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.onefactor.app.Entity.User;
 import com.onefactor.app.Repository.UserRepository;
-import com.onefactor.app.Response.ApiResponse;
-import com.onefactor.app.Response.Sender;
+ 
 import com.onefactor.app.Service.UserService;
 import com.onefactor.app.Utlities.JWT.JWTUtil;
 import com.onefactor.app.Utlities.OTP.OtpService;
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ApiResponse<Object> validateOtp(String phone, String code) {
+	public Object validateOtp(String phone, String code) {
 		String verificationId = userRepository.findByPhone(phone).getVerificationId();
 		System.out.println("Verification ID: " + verificationId);
 		return otpService.validateOtp(phone, code, verificationId);
@@ -138,15 +138,5 @@ public class UserServiceImpl implements UserService {
 		return profile;
 	}
 
-	@Override
-	public Sender getMoneySenderDetails(String phone) {
-		User user = userRepository.findByPhone(phone);
-		Sender sender = new Sender();
-		sender.setId(user.getId());
-		sender.setFirstName(user.getFirstName());
-		sender.setLastName(user.getLastName());
 
-		return sender;
-
-	}
 }

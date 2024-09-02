@@ -1,9 +1,10 @@
 package com.onefactor.app.Utlities.OTP;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onefactor.app.Entity.User;
-import com.onefactor.app.Response.ApiResponse;
+
 import com.onefactor.app.Utlities.JWT.JWTUtil;
 
 import java.net.URLEncoder;
@@ -82,7 +83,7 @@ public class OtpService {
 		}
 	}
 
-	public ApiResponse<Object> validateOtp(String phone, String code, String verificationId) {
+	public Object validateOtp(String phone, String code, String verificationId) {
 		try {
 			// URL encode parameters
 			String encodedVerificationId = URLEncoder.encode(verificationId, StandardCharsets.UTF_8.toString());
@@ -112,11 +113,11 @@ public class OtpService {
 			if (responseCode == 200) {
 				String token = jwtUtil.generateToken(phone);
 
-				return new ApiResponse<>(200, null, token);
+				return token;
 			} else {
 				// Extract the relevant error message
 				String errorMessage = jsonResponse.path("message").asText();
-				return new ApiResponse<>(responseCode, errorMessage, null);
+				return  errorMessage;
 			}
 
 		} catch (HttpClientErrorException e) {
@@ -124,14 +125,14 @@ public class OtpService {
 			try {
 				JsonNode jsonResponse = objectMapper.readTree(e.getResponseBodyAsString());
 				String errorMessage = jsonResponse.path("message").asText();
-				return new ApiResponse<>(e.getStatusCode().value(), errorMessage, null);
+				return  errorMessage;
 			} catch (Exception parseException) {
 				// Fallback in case of parsing error
-				return new ApiResponse<>(e.getStatusCode().value(), "Error parsing response: " + e.getMessage(), null);
+				return "Error parsing response: " + e.getMessage();
 			}
 		} catch (Exception e) {
 			// Handle other exceptions
-			return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Server Error: " + e.getMessage(), null);
+			return "Server Error: " + e.getMessage();
 		}
 	}
 

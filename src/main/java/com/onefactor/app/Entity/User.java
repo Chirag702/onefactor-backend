@@ -61,12 +61,6 @@ public class User {
 	
 	private int creditScore;
 	
-	   // Activities where this user is the sender
-    @OneToMany(mappedBy = "sender")
-    private Set<Activity> sentActivities;
 
-    // Activities where this user is the receiver
-    @OneToMany(mappedBy = "receiver")
-    private Set<Activity> receivedActivities;
 
 }
