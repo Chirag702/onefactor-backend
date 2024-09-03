@@ -24,7 +24,7 @@ public class User {
     @Column(unique = true, length = 10, nullable = false)
     private String phone;
 
-    @Column(unique = true, length = 10, nullable = false)
+    @Column(unique = true, length = 10)
     private String pan;
 
     @Column(nullable = false)
@@ -33,7 +33,7 @@ public class User {
     @Column(nullable = false)
     private String lastName;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String email;
 
     private String dob;
