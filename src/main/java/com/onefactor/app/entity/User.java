@@ -27,11 +27,9 @@ public class User {
     @Column(unique = true, length = 10)
     private String pan;
 
-    @Column(nullable = false)
-    private String firstName;
+     private String firstName;
 
-    @Column(nullable = false)
-    private String lastName;
+     private String lastName;
 
     @Column(unique = true)
     private String email;
