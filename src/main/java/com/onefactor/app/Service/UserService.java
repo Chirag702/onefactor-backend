@@ -1,17 +1,16 @@
 package com.onefactor.app.Service;
 
+import java.util.List;
 import java.util.Optional;
-
 
 import org.springframework.http.ResponseEntity;
 
 import com.onefactor.app.Entity.User;
 
-
 public interface UserService {
 	User saveUser(User user);
 
-    Object validateOtp(String phone, String code);
+	Object validateOtp(String phone, String code);
 
 	void initProfile(User user);
 
@@ -21,4 +20,10 @@ public interface UserService {
 
 	Object getUserMaskedDetails(String phone);
 
- }
+	User createUser(User user);
+
+	List<User> getAllUsers();
+
+	User getUserById(Long id);
+
+}

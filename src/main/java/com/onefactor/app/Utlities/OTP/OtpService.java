@@ -112,7 +112,6 @@ public class OtpService {
 
 			if (responseCode == 200) {
 				String token = jwtUtil.generateToken(phone);
-
 				return token;
 			} else {
 				// Extract the relevant error message

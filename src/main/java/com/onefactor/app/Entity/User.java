@@ -1,5 +1,7 @@
 package com.onefactor.app.Entity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -60,6 +62,14 @@ public class User {
 	private String verificationId;
 	
 	private int creditScore;
+	
+
+    @OneToMany(mappedBy = "user")
+    private List<UserGroup> userGroups = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<BillShare> billShares = new ArrayList<>();
+
 	
 
 

@@ -7,12 +7,14 @@ import org.springframework.stereotype.Service;
 
 import com.onefactor.app.Entity.User;
 import com.onefactor.app.Repository.UserRepository;
- 
+
 import com.onefactor.app.Service.UserService;
+import com.onefactor.app.Utilities.ResourceNotFoundException;
 import com.onefactor.app.Utlities.JWT.JWTUtil;
 import com.onefactor.app.Utlities.OTP.OtpService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -138,5 +140,18 @@ public class UserServiceImpl implements UserService {
 		return profile;
 	}
 
+	@Override
+	public User createUser(User user) {
+		return userRepository.save(user);
+	}
 
+	@Override
+	public List<User> getAllUsers() {
+		return userRepository.findAll();
+	}
+
+	@Override
+	public User getUserById(Long id) {
+		return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+	}
 }
