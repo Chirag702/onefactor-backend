@@ -10,4 +10,5 @@ public interface GroupService {
     List<Groups> getAllGroups();
     Groups getGroupById(Long id);
     void addUserToGroup(Long groupId, Long userId);
+	List<Groups> getGroupByUser(String phone);
 }

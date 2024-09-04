@@ -55,4 +55,11 @@ public class GroupServiceImpl implements GroupService {
 		return groupRepository.save(groups);
 
 	}
+
+	@Override
+	public List<Groups> getGroupByUser(String phone) {
+		User user=userRepository.findByPhone(phone);
+		List<Groups> groups=groupRepository.findAllByCreatedBy(user);
+		return groups;
+	}
 }
