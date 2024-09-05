@@ -31,7 +31,7 @@ public class Bill {
     @Column(nullable = false)
     private Double totalAmount;
 
-    @Column(nullable = false)
+   
     private LocalDate date;
 
     @ManyToOne

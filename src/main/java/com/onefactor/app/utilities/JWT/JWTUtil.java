@@ -22,7 +22,7 @@ public class JWTUtil {
 	public String generateToken(String phone) {
 		Map<String, Object> claims = new HashMap<>();
 		return Jwts.builder().setClaims(claims).setSubject(phone).setIssuedAt(new Date())
-				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours validity
+				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7)) // 1 week validity
 				.signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
 	}
 

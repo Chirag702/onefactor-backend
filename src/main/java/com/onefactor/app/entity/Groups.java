@@ -37,3 +37,5 @@ public class Groups {
     @OneToMany(mappedBy = "groups", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Bill> bills = new ArrayList<>();
 }
+
+

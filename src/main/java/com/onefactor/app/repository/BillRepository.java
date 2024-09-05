@@ -10,4 +10,5 @@ import com.onefactor.app.entity.Bill;
 public interface BillRepository extends JpaRepository<Bill, Long> {
 
 	List<Bill> findByGroupsId(Long groupId);
-}
+
+ }

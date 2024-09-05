@@ -7,7 +7,7 @@ import java.util.Map;
 import com.onefactor.app.entity.Bill;
 
 public interface BillService {
-    Bill createBill(Long groupId, Bill bill, Map<Long, Double> userShares);
-    List<Bill> getAllBillsForGroup(Long groupId);
+     List<Bill> getAllBillsForGroup(Long groupId);
     Bill getBillById(Long id);
+	Bill createBill(Long groupId, Bill bill, Map<Long, Double> userShares);
 }
