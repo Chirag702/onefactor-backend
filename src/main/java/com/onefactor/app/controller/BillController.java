@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.onefactor.app.entity.Bill;
+import com.onefactor.app.entity.DTO.BillRequest;
 import com.onefactor.app.service.BillService;
 
 @RestController
@@ -21,9 +22,8 @@ public class BillController {
 
     @PostMapping("/groups/{groupId}")
     public ResponseEntity<Bill> createBill(@PathVariable Long groupId, 
-                                           @RequestBody Bill bill, 
-                                           @RequestBody Map<Long, Double> userShares) {
-        Bill createdBill = billService.createBill(groupId, bill, userShares);
+                                           @RequestBody BillRequest billRequest) {
+        Bill createdBill = billService.createBill(groupId, billRequest.getBill(), billRequest.getUserShares());
         return new ResponseEntity<>(createdBill, HttpStatus.CREATED);
     }
 
